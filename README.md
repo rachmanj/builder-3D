@@ -153,6 +153,33 @@ curl -s localhost:8070/profiles/filaments   > filaments.json
 
 ---
 
+## Keselamatan host
+
+Mesin ini **sudah melayani produksi VASIA Stationery** (`https://vasia.sbs`) dan beberapa
+container produksi lain — **tanpa batas CPU/RAM sama sekali**. Jadi Gramasi wajib dibatasi
+dari sisi kita:
+
+| Bagian | Batas |
+|---|---|
+| Worker slice | `--cpus=6 --memory=3g --cpu-shares=256` |
+| Aplikasi | `--cpus=2 --memory=1g --cpu-shares=512` |
+| DB | `--cpus=1 --memory=1g` |
+
+`--cpu-shares` lebih rendah = saat rebutan CPU, VASIA selalu menang. Port: 8100 (aplikasi),
+8071 (worker), 3312 (DB) — tidak menyerobot 80/443/8000/8001/8090/3306/3309/6379.
+Tunnel Cloudflare Gramasi **terpisah** dari tunnel `vasia.sbs`, supaya VASIA tidak pernah
+terputus sedetik pun.
+
+Periksa sebelum dan sesudah setiap deploy:
+
+```bash
+./scripts/cek-vasia.sh "sebelum deploy"
+```
+
+Skrip itu memeriksa `vasia.sbs` menjawab (302 = normal), container produksi tidak ter-restart,
+sumber daya host, dan **setiap container Gramasi wajib punya batas** — kalau ada yang tanpa
+batas, skrip keluar dengan kode gagal.
+
 ## Batas kejujuran
 
 - Akurasi gramasi **±3%**; variasi antar-run ±1%. Jangan janji lebih halus.
