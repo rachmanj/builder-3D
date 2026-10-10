@@ -1,0 +1,31 @@
+# dibuat otomatis / artefak
+**/data/
+*.log
+out*.txt
+__pycache__/
+*.pyc
+
+# hasil slice & model (biner besar — jangan masuk repo)
+*.glb
+*.stl
+*.gcode
+*SLICED.3mf
+
+# dump katalog profil (regenerasi dari container, lihat README)
+research/**/filaments.json
+research/**/processes.json
+
+# Laravel / PHP (kalau aplikasi mulai dibangun di sini)
+/vendor/
+/node_modules/
+.env
+.env.*
+!.env.example
+storage/*.key
+/public/build/
+/public/hot
+
+# editor & OS
+.idea/
+.vscode/
+.DS_Store
